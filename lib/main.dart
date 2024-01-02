@@ -4,12 +4,13 @@ import 'package:android_package_installer/android_package_installer.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:violet_manager/util/settings.dart';
 import 'package:violet_manager/util/update.dart';
 import 'package:violet_manager/util/version.dart';
 
-void main() {
-    runApp(const MyApp());
+void main() async {
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -119,6 +120,11 @@ class _MyHomePageState extends State<MyHomePage> {
     installLock = false;
   }
 
+  void setTarget(){
+    Settings.releaseChannel = releaseChannelController.text;
+  }
+
+  final releaseChannelController = TextEditingController(text: 'TaYaKi71751/violet-git');
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +138,17 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Owner/Build_Channel_Repository'
+              ),
+              controller: releaseChannelController,
+            ),
+            IconButton(
+              onPressed: setTarget,
+              icon: const Icon(Icons.save)
+            ),
             if(_downloading == true)
             Text(
               'Progress : ${_count} / ${_total}'
