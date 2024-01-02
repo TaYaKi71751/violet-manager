@@ -4,12 +4,11 @@ import 'package:android_package_installer/android_package_installer.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:violet_manager/util/settings.dart';
 import 'package:violet_manager/util/update.dart';
 import 'package:violet_manager/util/version.dart';
 
-void main() async {
+void main() {
   runApp(const MyApp());
 }
 
@@ -54,7 +53,6 @@ class _MyHomePageState extends State<MyHomePage> {
   int _count = 0;
   int _total = 0;
   bool? _downloading;
-  bool? _needUpdate;
   bool? installLock;
   Future<void> init() async {
     final currentVersion = await VersionManager.getCurrent();
@@ -120,8 +118,14 @@ class _MyHomePageState extends State<MyHomePage> {
     installLock = false;
   }
 
-  void setTarget(){
+  void setTarget() async {
     Settings.releaseChannel = releaseChannelController.text;
+    final currentVersion = await VersionManager.getCurrent();
+    final latestVersion = await UpdateManager.getLatestAppVersion();
+    setState((){
+      _currentVersion = currentVersion;
+      _latestVersion = latestVersion;
+    });
   }
 
   final releaseChannelController = TextEditingController(text: 'TaYaKi71751/violet-git');
