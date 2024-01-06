@@ -50,7 +50,7 @@ jobs:
         uses: marvinpinto/action-automatic-releases@latest
         with:
           title: ${{ needs.check_hash.outputs.after }}
-          automatic_release_tag: "${{ needs.check_hash.outputs.after }}"
+          automatic_release_tag: "latest-${{ needs.check_hash.outputs.after }}"
           prerelease: true
           draft: false
           files: |
