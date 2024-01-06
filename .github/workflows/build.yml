@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
-          git rev-parse HEAD > ../dev_hash
+          git rev-parse HEAD > ./dev_hash
       - id: after
         run: echo "::set-output name=hash::$(cat dev_hash | tr -d '\n')"
 
