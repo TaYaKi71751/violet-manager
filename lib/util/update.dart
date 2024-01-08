@@ -7,10 +7,12 @@ import 'package:ota_update/ota_update.dart';
 
 class UpdateManager {
 	static Future<AppVersion> getLatestAppVersion() async {
+    await Settings.init();
 		http.Response res = await http.get(Uri.parse('https://raw.githubusercontent.com/${Settings.releaseChannel}/HEAD/appversion'));
 		return AppVersion.fromString(res.body.trim());
 	}
 	static Future<String> getReleaseByTag(String tag) async {
+    await Settings.init();
     final url = 'https://github.com/${Settings.releaseChannel}/releases/download/${tag.replaceAll('+','-')}/app-release.apk';
 		return url;
 	}
