@@ -43,6 +43,7 @@ dependencies:
   android_package_installer: ^0.0.2
   path_provider: ^2.1.1
   dio: ^5.4.0
+  open_file: ^3.3.2
 
 dev_dependencies:
   flutter_test:

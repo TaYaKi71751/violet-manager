@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:android_package_installer/android_package_installer.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:violet_manager/util/settings.dart';
 import 'package:violet_manager/util/update.dart';
@@ -54,13 +55,16 @@ class _MyHomePageState extends State<MyHomePage> {
   int _total = 0;
   bool? _downloading;
   bool? installLock;
+  String installStatus = '';
   Future<void> init() async {
-    final currentVersion = await VersionManager.getCurrent();
-    final latestVersion = await UpdateManager.getLatestAppVersion();
-    setState((){
-      _currentVersion ??= currentVersion;
-      _latestVersion ??= latestVersion;
-    });
+    if(_currentVersion == null || _latestVersion == null){
+      final currentVersion = await VersionManager.getCurrent();
+      final latestVersion = await UpdateManager.getLatestAppVersion();
+      setState((){
+        _currentVersion ??= currentVersion;
+        _latestVersion ??= latestVersion;
+      });
+    }
   }
 
   Future<void> downloadApp() async {
@@ -79,12 +83,14 @@ class _MyHomePageState extends State<MyHomePage> {
         '$url',
         '${(await getTemporaryDirectory()).path}/violet.apk',
         onReceiveProgress:(count, total) {
+          setState(() {
             _count = count;
             _total = total;
+          });
         },
       );
     } catch(_){
-
+      print(_);
     }
     finally {
       setState(() {
@@ -93,11 +99,16 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
   Future<void> installApp() async {
-    int? statusCode = await AndroidPackageInstaller.installApk(apkFilePath: '${(await getTemporaryDirectory()).path}/violet.apk');
-    if (statusCode != null) {
-      PackageInstallerStatus installationStatus = PackageInstallerStatus.byCode(statusCode);
-      print(installationStatus.name);
-    }
+    setState(() {
+      installStatus = 'Opening APK file';
+    });
+    final result = await OpenFile.open('${(await getTemporaryDirectory()).path}/violet.apk');
+    setState(() {
+      installStatus = (
+        '${result.type}\n'
+        '${result.message}'
+      );
+    });
   }
 
   Future<void> _updateApp() async {
@@ -158,10 +169,25 @@ class _MyHomePageState extends State<MyHomePage> {
               'Progress : ${_count} / ${_total}'
             ),
             Text(
-              'Current Version: ${_currentVersion?.toString() ?? ''}',
+              installStatus
             ),
             Text(
-              'Latest Version: ${_latestVersion?.toString() ?? ''}',
+              'Current Version'
+            ),
+            Text(
+              _currentVersion.toString().split('-').elementAtOrNull(0) ?? ''
+            ),
+            Text(
+              _currentVersion.toString().split('-').elementAtOrNull(1) ?? ''
+            ),
+            Text(
+              'Latest Version'
+            ),
+            Text(
+              _latestVersion.toString().split('-').elementAtOrNull(0) ?? ''
+            ),
+            Text(
+              _latestVersion.toString().split('-').elementAtOrNull(1) ?? ''
             ),
           ],
         ),
