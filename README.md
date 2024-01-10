@@ -1,16 +1,11 @@
 # violet_manager
 
-A new Flutter project.
+# Current Version
+[code](https://github.com/TaYaKi71751/violet-manager/blob/3cee952440a17c425c7ac6cbf0333d24b69842f8/lib/util/version.dart#L86C2-L122C1)
+```
+It gathers current version name with InstalledApps
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+It gathers current version code with hash
+unzip <INSTALLED_PACKAGE>.apk -d <TMP_DIRECTORY>
+cat <TMP_DIRECTORY>/assets/flutter_assets/assets/HEAD
+```
